@@ -1,0 +1,11 @@
+{
+  "name": "search-challenge",
+  "version": "1.0.0",
+  "description": "A Search Challenge executed in order to display programming knowledge of indexing algorithms and information retrieval algorithms, as part of the selection process of Luiza Labs.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Paulo Magno",
+  "license": "ISC"
+}
