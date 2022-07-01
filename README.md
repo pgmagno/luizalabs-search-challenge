@@ -1,6 +1,6 @@
-# luizalabs-search-challenge
+# LuizaLabs Search Challenge
 
 ## Description
 
-A Search Challenge executed in order to display programming knowledge of indexing algorithms and information retrieval algorithms, as part of the selection process of Luiza Labs
+A Search Challenge executed in order to display programming knowledge of indexing algorithms and information retrieval algorithms, as part of the selection process of Luiza Labs.
 
