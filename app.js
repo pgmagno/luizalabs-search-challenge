@@ -1,57 +1,105 @@
 const fs = require('fs');
+const r = require("./rules");
+const p = require('./receiveAndPrepareInput');
 
-const path = "./data/";
-// Function to get current filenames
-// in directory
+const path = "./data2/";
+
+
 fs.readdir(path, (err, files) => {
     if (err)
         console.log(err);
     else {
-        let results = [];
-        let count = 0;
-        files.forEach(file => {        
-            fs.readFile(path + file, 'utf-8', (err, content) => {
+        console.log(r.rules);
+        const sortedFiles = Array.from(files);
+
+        const terms = p.receiveUserInput(process.argv[2]);
+        console.log(terms);
+        console.log(p.prepareTerms(terms, r.rules));
+
+
+        sortedFiles.forEach(fileName => {        
+            fs.readFile(path + fileName, 'utf-8', (err, content) => {
                 if (err)
                     console.log(err);
                 else {
-                    if(searchForTerm(process.argv[2], content)){
-                        results.push(file);                        
-                    }                    
-                }                
-                count++;
-                printResults(count, files.length, results);                
+                    searchForTerm(process.argv[2], content, fileName);
+                }
+                printResults(count, sortedFiles.length);                
             });
         });        
     }
 });
 
-function searchForTerm(string, content) {
+function transformIntoRegExp(string) {
 
     const terms = string.split(" ");
-    const regexedTerms = [];
 
-    for (let i = 0; i < terms.length; i++) {
-        regexedTerms.push(new RegExp('\\b' + terms[i] + '\\b' ,'gmi'));
-    }   
+    const regExpTermsExactMatch = [];
+    const regExpTermsPluralMatch = [];
+    const regExpTermsSimilarMatch = [];
 
-    let count = 0;
+    terms.forEach( term => {    
+        regExpTermsExactMatch.push(new RegExp('\\b' + term + '\\b' ,'gmi'));
+        regExpTermsPluralMatch.push(new RegExp('\\b' + pluralize(term) + '\\b' ,'gmi'));
+        regExpTermsSimilarMatch.push(new RegExp('\\b([a-z0-9]{1,3})?' + term + '([a-z0-9]{1,3})?\\b' ,'gmi'));
+    });
+
+    const transformedTerms = {
+        'exact': regExpTermsExactMatch,
+        'plural': regExpTermsPluralMatch,
+        'similar': regExpTermsSimilarMatch,
+    };
+
+    return transformedTerms;
+}
+
+function searchForTerm(transformedTerms, fileName, fileContent) {
     
-    for (let i = 0; i < terms.length; i++) {
-         if(content.match(regexedTerms[i]) !== null) {
-             count += 1;
-         }
+    const results = {
+        'exact': [],
+        'plural': [],
+        'similar': []
     }
-    return count == terms.length ? true : false;
+
+    transformedTerms.exact.forEach( term => {
+        if(fileContent.match(term) !== null){
+            results.exact.push(fileName);
+        }
+    });
+    transformedTerms.plural.forEach( term => {
+        if(fileContent.match(term) !== null){
+            results.plural.push(fileName);
+        }
+    });
+    transformedTerms.similar.forEach( term => {
+        if(fileContent.match(term) !== null){
+            results.similar.push(fileName);
+        }
+    });
+
+    return results;
 }
 
 function printResults(count, listOfFilesLength, results) {
     if(count == listOfFilesLength) {
         if(results.length == 0) {
-            console.log('Não foram encontrados resultados');
+            console.log('\nNão foram encontrados resultados\n');
         } else {                        
             console.log(`\nForam encontradas ${results.length} ocorrências para o termo "${process.argv[2]}".`);
             console.log(`Os arquivos que possuem "${process.argv[2]}" são:\n`);
-            results.forEach( result => {
+            
+            console.log(`\nResultados exatos:`);
+            results.exact.forEach( result => {
+                console.log(result);
+            });
+            
+            console.log(`\nResultados do termo no plural:`);
+            results.plural.forEach( result => {
+                console.log(result);
+            });
+            
+            console.log(`\nResultados similares:`);
+            results.similar.forEach( result => {
                 console.log(result);
             });
         }
