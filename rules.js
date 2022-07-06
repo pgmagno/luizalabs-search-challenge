@@ -10,7 +10,7 @@ const rules = [
             "Nome":"Similar",
             "Criterio": "OR",
             "RegExpBefore": "\\b([a-z0-9]{1,3})?",
-            "RegExpAfter": "\\b([a-z0-9]{1,3})?",
+            "RegExpAfter": "([a-z0-9]{1,3})?\\b",
             "RegExpFlag": "gmi"
         }
     ]

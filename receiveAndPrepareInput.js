@@ -1,5 +1,3 @@
-const r = require("./rules");
-
 function receiveUserInput(string) {
 
     if(process.argv[2] == null || process.argv[2] == " ") {
@@ -27,6 +25,7 @@ function prepareTerms(terms, rules) {
         const termAndRule = [
             rule.Nome,
             rule.Criterio,
+            [],
             []        
         ];
 
@@ -35,12 +34,8 @@ function prepareTerms(terms, rules) {
         }
         preparedTerms.push(termAndRule);            
     });
-    console.log(preparedTerms);
     return preparedTerms;
 }
-const inputs = receiveUserInput(process.argv[2]);
-prepareTerms(inputs, r.rules);
-
 
 exports.receiveUserInput = receiveUserInput; 
 exports.prepareTerms = prepareTerms;

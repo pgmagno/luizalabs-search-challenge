@@ -1,107 +1,45 @@
 const fs = require('fs');
 const r = require("./rules");
 const p = require('./receiveAndPrepareInput');
+const s = require('./search');
+const remove = require('./removeDupes');
+const print = require('./printResults'); 
 
-const path = "./data2/";
-
+const path = "./data/";
 
 fs.readdir(path, (err, files) => {
     if (err)
         console.log(err);
     else {
-        console.log(r.rules);
-        const sortedFiles = Array.from(files);
+        
+        const sortedFiles = Array.from(files).sort( (last, next) => last > next ? 1 : -1);
 
-        const terms = p.receiveUserInput(process.argv[2]);
-        console.log(terms);
-        console.log(p.prepareTerms(terms, r.rules));
+        const terms = p.receiveUserInput(process.argv[2]);        
+        const termsAndRules = p.prepareTerms(terms, r.rules);
+        let count = 0;
 
-
-        sortedFiles.forEach(fileName => {        
-            fs.readFile(path + fileName, 'utf-8', (err, content) => {
+        sortedFiles.forEach(fileName => {
+            
+            fs.readFile(path + fileName, 'utf-8', (err, fileContent) => {
+                
                 if (err)
                     console.log(err);
                 else {
-                    searchForTerm(process.argv[2], content, fileName);
+                    termsAndRules.forEach(rule => {                        
+                        if(s.searchForTerms(rule[1], rule[2], fileContent)){
+                            rule[3].push(fileName);
+                        }
+                    });
                 }
-                printResults(count, sortedFiles.length);                
-            });
-        });        
+
+                count++;
+
+                if(count == sortedFiles.length) {                
+                    const convertedReport = remove.convertReport(termsAndRules);
+                    const finalReport = remove.removeOuterDuplicates(convertedReport);    
+                    print.printReport(finalReport);
+                }
+            });            
+        });    
     }
 });
-
-function transformIntoRegExp(string) {
-
-    const terms = string.split(" ");
-
-    const regExpTermsExactMatch = [];
-    const regExpTermsPluralMatch = [];
-    const regExpTermsSimilarMatch = [];
-
-    terms.forEach( term => {    
-        regExpTermsExactMatch.push(new RegExp('\\b' + term + '\\b' ,'gmi'));
-        regExpTermsPluralMatch.push(new RegExp('\\b' + pluralize(term) + '\\b' ,'gmi'));
-        regExpTermsSimilarMatch.push(new RegExp('\\b([a-z0-9]{1,3})?' + term + '([a-z0-9]{1,3})?\\b' ,'gmi'));
-    });
-
-    const transformedTerms = {
-        'exact': regExpTermsExactMatch,
-        'plural': regExpTermsPluralMatch,
-        'similar': regExpTermsSimilarMatch,
-    };
-
-    return transformedTerms;
-}
-
-function searchForTerm(transformedTerms, fileName, fileContent) {
-    
-    const results = {
-        'exact': [],
-        'plural': [],
-        'similar': []
-    }
-
-    transformedTerms.exact.forEach( term => {
-        if(fileContent.match(term) !== null){
-            results.exact.push(fileName);
-        }
-    });
-    transformedTerms.plural.forEach( term => {
-        if(fileContent.match(term) !== null){
-            results.plural.push(fileName);
-        }
-    });
-    transformedTerms.similar.forEach( term => {
-        if(fileContent.match(term) !== null){
-            results.similar.push(fileName);
-        }
-    });
-
-    return results;
-}
-
-function printResults(count, listOfFilesLength, results) {
-    if(count == listOfFilesLength) {
-        if(results.length == 0) {
-            console.log('\nNão foram encontrados resultados\n');
-        } else {                        
-            console.log(`\nForam encontradas ${results.length} ocorrências para o termo "${process.argv[2]}".`);
-            console.log(`Os arquivos que possuem "${process.argv[2]}" são:\n`);
-            
-            console.log(`\nResultados exatos:`);
-            results.exact.forEach( result => {
-                console.log(result);
-            });
-            
-            console.log(`\nResultados do termo no plural:`);
-            results.plural.forEach( result => {
-                console.log(result);
-            });
-            
-            console.log(`\nResultados similares:`);
-            results.similar.forEach( result => {
-                console.log(result);
-            });
-        }
-    }
-}

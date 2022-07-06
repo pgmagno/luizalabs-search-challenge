@@ -1,28 +1,81 @@
+function removeInnerDuplicates(dirtyReport) {
 
-const exact = ['a','b','c','d'];
-const plural = ['a','b','c','d','b','z','a','e'];
-const similar = ['a','b','c','d','b','z','a','e','z','e'];
+    const cleanReport = [];
 
-//removes duplicates from arrays
-const exactUnique = [...new Set(exact)];
-const pluralUnique = [...new Set(plural)];
-const similarUnique = [...new Set(similar)];
+    dirtyReport.forEach( array => {
+        const newEntry = [];
+        newEntry.push(array[0]); //pushing Rule Name
+        const uniqueResultsArray = [...new Set(array[3])]; //removing inner duplicates from results
+        newEntry.push(uniqueResultsArray); //pushing clean results
+        cleanReport.push(newEntry); //pushing new entry
+    });
 
-// compares exact and plural, and removes duplicates from plural
-const pluralWithoutExacts = pluralUnique.filter(item => !exactUnique.includes(item));
-// compares exact and similar, and removes duplicates from similar  
-const similarWithoutExacts = similarUnique.filter(item => !exactUnique.includes(item));
-// compares plural and similar, and removes duplicates from similar
-const similarWithoutDuplicates = similarWithoutExacts.filter(item => !pluralWithoutExacts.includes(item));
+    return cleanReport;
+}
 
-console.log(exactUnique, pluralWithoutExacts, similarWithoutDuplicates);
+function convertReport(report) {
 
-// newPlural = plural.filter(item => !exact.includes(item));
-// newPlural2 = newPlural.filter(item => !newPlural.includes(item));
-// newSimilar = similar.filter(item => !exact.includes(item));
+    const convertedReport = [];
 
-// console.log(exact, newPlural2, newSimilar)
+    report.forEach(originalEntry => {
+        const newEntry = [];
+        newEntry.push(originalEntry[0]);
+        newEntry.push(originalEntry[3]);
+        convertedReport.push(newEntry);
+    })
 
-// removeDuplicates(exact, plural);
-// removeDuplicates(exact, similar);
-// removeDuplicates(plural, similar);
+    return convertedReport;
+}
+
+
+function removeOuterDuplicates (dirtyReport) {
+
+    if(dirtyReport.length == 1) {
+        return dirtyReport;
+    }
+
+    const intermediateReport = [];
+    const firstEntry = dirtyReport[0];
+    intermediateReport.push(firstEntry);
+
+    for (let i = 0; i < dirtyReport.length - 1; i++) {
+
+        const shiftedOut = dirtyReport.shift();
+        
+        dirtyReport.forEach( entry => {        
+
+            if(entry[1].filter(item => !shiftedOut[1].includes(item)) != null){      
+                const newResults = entry[1].filter(item => !shiftedOut[1].includes(item));
+                const newEntry = [];
+                newEntry.push(entry[0]);
+                newEntry.push(newResults);
+                intermediateReport.push(newEntry);        
+            } else {
+                intermediateReport.push(entry);
+            }        
+        });
+    }
+
+    const cleanReport = [];
+    cleanReport.push(firstEntry);
+
+    for (let i = 0; i < intermediateReport.length; i++) {
+
+        const shiftedOut = intermediateReport.shift();
+
+        if(intermediateReport[0][1].filter(item => !shiftedOut[1].includes(item)) != null) {
+            const newResults = intermediateReport[0][1].filter(item => !shiftedOut[1].includes(item));
+            const newEntry = [];
+            newEntry.push(intermediateReport[0][0]);
+            newEntry.push(newResults);
+            cleanReport.push(newEntry);
+        } else {
+            cleanReport.push(intermediateReport[0]);
+        }  
+    }
+    return cleanReport;
+}
+
+exports.removeInnerDuplicates = removeInnerDuplicates;
+exports.removeOuterDuplicates = removeOuterDuplicates;
+exports.convertReport = convertReport;

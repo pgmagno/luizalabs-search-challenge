@@ -1,47 +1,18 @@
-function searchForTerms(termsAndParameters, file, fileName) {
-    
-    const finalReport = [];
+function searchTerms(ruleCriteria, termsArray, fileContent) {
 
-    termsAndParameters.forEach( rule => {
-
-        const result = [];
-        const fileNames = [];
-        result.push(rule[0]);
-        
-        let count = 0;
-
-        for(let i = 0; i < rule[2].length; i++){
-            if(file.match(rule[2][i]) !== null) {
-                fileNames.push(fileName);            
-                count++;                
-            }
+    let count = 0;
+    termsArray.forEach( term => {
+        if(fileContent.match(term) != null) {            
+            count++;                
         }
-
-        if (rule[1] == "AND" && count != rule[2].length){
-            const newResult = [];
-            newResult.push(rule[0]);
-            newResult.push([]);
-            finalReport.push(newResult);
-        } else {
-            result.push(fileNames); 
-            finalReport.push(result);
-        }
-        
     });
-    
-    return finalReport;
+
+    if(ruleCriteria == "AND" && count == termsArray.length) {
+        return true;
+    } else if(ruleCriteria == "OR" && count > 0) {
+        return true;
+    }
+    return false;
 }
 
-const searchParams = [
-    ['Exato',"AND",[ 
-        /\bbilu\b/gim, 
-        /\bcreme\b/gim]],
-    ['Similar',"OR",[ 
-        /\b([a-z0-9]{1,3})?bilu\b([a-z0-9]{1,3})?/gim,
-        /\b([a-z0-9]{1,3})?creme\b([a-z0-9]{1,3})?/gim]]
-]
-
-const name = 'a';
-const content = "bilu creme caju";
-
-console.log(searchForTerms(searchParams,content,name));
+exports.searchForTerms = searchTerms;
