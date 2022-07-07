@@ -13,21 +13,15 @@ function removeInnerDuplicates(dirtyReport) {
     return cleanReport;
 }
 
-function convertReport(report) {
-
-    const convertedReport = [];
-
-    report.forEach(originalEntry => {
-        const newEntry = [];
-        newEntry.push(originalEntry[0]);
-        newEntry.push(originalEntry[3]);
-        convertedReport.push(newEntry);
-    })
-
-    return convertedReport;
-}
-
-
+const reportBig = [
+    ['a','AND',[/bTEST/,/TEST2/],[1,2,3,4,5]],
+    ['a','OR',[/bTEST/,/TEST2/],[1,2,3,4,5,6,7,8,9,0]],
+    ['a','AND',[/bTEST/,/TEST2/],[1,2,3,4,5,6,7,8,9,0,11,12,13]]]
+const report1 = [
+    ['a',[1,2,3,4,5]],
+    ['a',[1,2,3,4,5,6,7,8,9,0]],
+    ['a',[1,2,3,4,5,6,7,8,9,0,11,12,13]]
+]
 function removeOuterDuplicates (dirtyReport) {
 
     if(dirtyReport.length == 1) {
@@ -44,12 +38,11 @@ function removeOuterDuplicates (dirtyReport) {
         
         dirtyReport.forEach( entry => {        
 
-            if(entry[1].filter(item => !shiftedOut[1].includes(item)) != null){      
-                const newResults = entry[1].filter(item => !shiftedOut[1].includes(item));
-                const newEntry = [];
-                newEntry.push(entry[0]);
-                newEntry.push(newResults);
-                intermediateReport.push(newEntry);        
+            if(entry[3].filter(item => !shiftedOut[3].includes(item)) != null){      
+                const newResults = entry[3].filter(item => !shiftedOut[3].includes(item));
+                entry.pop();
+                entry.push(newResults);
+                intermediateReport.push(entry);  
             } else {
                 intermediateReport.push(entry);
             }        
@@ -63,12 +56,11 @@ function removeOuterDuplicates (dirtyReport) {
 
         const shiftedOut = intermediateReport.shift();
 
-        if(intermediateReport[0][1].filter(item => !shiftedOut[1].includes(item)) != null) {
-            const newResults = intermediateReport[0][1].filter(item => !shiftedOut[1].includes(item));
-            const newEntry = [];
-            newEntry.push(intermediateReport[0][0]);
-            newEntry.push(newResults);
-            cleanReport.push(newEntry);
+        if(intermediateReport[0][3].filter(item => !shiftedOut[3].includes(item)) != null) {
+            const newResults = intermediateReport[0][3].filter(item => !shiftedOut[3].includes(item));
+            intermediateReport[0].pop();
+            intermediateReport[0].push(newResults);
+            cleanReport.push(intermediateReport[0]);
         } else {
             cleanReport.push(intermediateReport[0]);
         }  
@@ -78,4 +70,3 @@ function removeOuterDuplicates (dirtyReport) {
 
 exports.removeInnerDuplicates = removeInnerDuplicates;
 exports.removeOuterDuplicates = removeOuterDuplicates;
-exports.convertReport = convertReport;

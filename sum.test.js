@@ -5,6 +5,6 @@ const s = require('./search');
 const remove = require('./removeDupes');
 const print = require('./printResults'); 
 
-test('adds 1 + 2 to equal 3', () => {
+test('', () => {
   expect(sum(1, 2)).toBe(3);
 });

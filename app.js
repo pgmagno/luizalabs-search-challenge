@@ -5,7 +5,7 @@ const s = require('./search');
 const remove = require('./removeDupes');
 const print = require('./printResults'); 
 
-const path = "./data/";
+const path = "./data2/";
 
 fs.readdir(path, (err, files) => {
     if (err)
@@ -13,8 +13,8 @@ fs.readdir(path, (err, files) => {
     else {
         
         const sortedFiles = Array.from(files).sort( (last, next) => last > next ? 1 : -1);
-
-        const terms = p.receiveUserInput(process.argv[2]);        
+        console.log(sortedFiles);
+        const terms = p.receiveUserInput(process.argv[2]);  
         const termsAndRules = p.prepareTerms(terms, r.rules);
         let count = 0;
 
@@ -35,8 +35,8 @@ fs.readdir(path, (err, files) => {
                 count++;
 
                 if(count == sortedFiles.length) {                
-                    const convertedReport = remove.convertReport(termsAndRules);
-                    const finalReport = remove.removeOuterDuplicates(convertedReport);    
+                   // const convertedReport = remove.convertReport(termsAndRules);
+                    const finalReport = remove.removeOuterDuplicates(termsAndRules);    
                     print.printReport(finalReport);
                 }
             });            
