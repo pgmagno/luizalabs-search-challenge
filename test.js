@@ -4,7 +4,7 @@ const p = require('./receiveAndPrepareInput');
 const s = require('./search');
 const remove = require('./removeDupes');
 const print = require('./printResults'); 
-
+// const fs = require('fs/promises');
 const path = "./data/";
 
 fs.readdir(path, (err, files) => {
@@ -18,20 +18,11 @@ fs.readdir(path, (err, files) => {
         const termsAndRules = p.prepareTerms(terms, r.rules);
         let count = 0;
 
-        sortedFiles.forEach(fileName => {
-            
-            const data = fs.readFileSync(path + fileName, 'utf8');
-            termsAndRules.forEach(rule => {
-                if(s.searchForTerms(rule[1], rule[2], data)){
-                    rule[3].push(fileName);
-                }                
-            });
-            count++;
+        sortedFiles.forEach(fileName => {           
 
-            if(count == sortedFiles.length) {
-                const finalReport = remove.removeOuterDuplicates(termsAndRules);    
-                print.printReport(finalReport);
-            }
+            const data = fs.readFileSync(path + fileName, 'utf8');
+            console.log(data);
+
         });
-    }    
+    }
 });
