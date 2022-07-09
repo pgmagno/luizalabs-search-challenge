@@ -1,14 +1,14 @@
 const rules = [
         {
-            "Nome":"Exata",
-            "Criterio": "AND",
+            "Name":"Exata",
+            "Criteria": "AND",
             "RegExpBefore": "\\b",
             "RegExpAfter": "\\b",
             "RegExpFlag": "gmi"
         },
         {
-            "Nome":"Similar",
-            "Criterio": "OR",
+            "Name":"Similar",
+            "Criteria": "OR",
             "RegExpBefore": "\\b([a-z0-9]{1,3})?",
             "RegExpAfter": "([a-z0-9]{1,3})?\\b",
             "RegExpFlag": "gmi"
