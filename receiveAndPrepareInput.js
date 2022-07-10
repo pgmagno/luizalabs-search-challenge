@@ -35,19 +35,19 @@ function checkRules(rules) {
     }
 
     rules.forEach( rule => {        
-
+        // checks the number of keys in the rule object 
         if(Object.keys(rule).length != 5) {
             throw new Error("Rules file contains rule objects with incorrect number of keys.\n");
         }
-
+        // checks if incorrect flags were inserted in the rule
         if(rule.RegExpFlag.match(/[^gimsuy]/) != null){
             throw new Error("Rules file contains unsupported Regular Expressions FLAGS.\n");
         }
-
+        // checks if the criteria differs from AND or OR
         if(rule.Criteria != "AND" && rule.Criteria != "OR"){
             throw new Error("Rules file contains rule objects with incorrect CRITERIA. Supported: 'AND', 'OR'.\n");
         }
-        
+        // checks if the elements of the Regular Expression produce a valid Reg Exp
         let isValid = true;
         const term1 = "term1";
             try {
@@ -58,17 +58,26 @@ function checkRules(rules) {
             if(!isValid){
                 throw new Error("Rules file contains rule objects with invalid RegExp parameters.\n");
             }
-
+        
+        // checks if there are typos in the rule object keys
         if (JSON.stringify(Object.keys(rule)) != JSON.stringify(Object.keys(objectModel))){
             throw new Error("Rules file contains rule objects with misspelled keys.\n");
         }
     });
-
+    //if everything goes well, returns true
     return true;
 }
 
 function prepareTerms(terms, rules) {
-
+    // the objective of this function is to assemble an array composed of subarrays
+    // each subarray represents a rule in the rules file and the necessary information to search according to it
+    // the necessary information is:
+    // STRING - the name of rule (Any name can be chosen)
+    // STRING - the rule criteria (AND or OR)
+    // ARRAY of REGULAR EXPRESSIONS - the regular expressions produced by the following code (uses the rules files and user input)
+    // ARRAY - an empty array in which the results will later be inserted
+    // it will look like this:
+    // ['name','criteria',[regExp1,... regExpN],[]]
     const preparedTerms = [];
     
     rules.forEach( rule => {
@@ -79,7 +88,7 @@ function prepareTerms(terms, rules) {
             []        
         ];
 
-        terms.forEach( term => {
+        terms.forEach( term => { // create a regExp with the information passed
             termAndRule[2].push(new RegExp(rule.RegExpBefore + term + rule.RegExpAfter, rule.RegExpFlag));
         });
 

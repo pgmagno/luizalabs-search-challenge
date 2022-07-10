@@ -2,20 +2,21 @@ const remove = require('./removeDuplicates');
 
 test('Returns an ARRAY containing SUBARRAY STRUCTURES with unique result values', () => {
     const report = [
-        [ 'Exata', 'AND', [ /\bterm1\b/gim, /\bterm2\b/gim ], ['a','b','c','d'] ],
-        [ 'Similar','OR',[
-          /\b([a-z0-9]{1,3})?term1([a-z0-9]{1,3})?\b/gim,
-          /\b([a-z0-9]{1,3})?term2([a-z0-9]{1,3})?\b/gim
-        ],['b','c','e','a','d','a','f','b']
-        ]
+        [ 'Exata', 'AND', [], ['a','b','c','d'] ],
+        [ 'Similar','OR',[],['a','b','c','d','e','f']],
+        [ 'Similar','OR',[],['b','g','c','d','e','f','a','h']],
+        [ 'Similar','OR',[],['a','b','c','d','e','f','g','h','i','j']],
+        [ 'Similar','OR',[],['a','k','c','d','l','f','g','h','i','j','e','b']],
+        [ 'Similar','OR',[],['d','m','c','e','f','g','h','i','a','l','n']]        
     ];
+
     const result = [
-        [ 'Exata', 'AND', [ /\bterm1\b/gim, /\bterm2\b/gim ], ['a','b','c','d'] ],
-        [ 'Similar','OR',[
-          /\b([a-z0-9]{1,3})?term1([a-z0-9]{1,3})?\b/gim,
-          /\b([a-z0-9]{1,3})?term2([a-z0-9]{1,3})?\b/gim
-        ],['e','f']
-        ]
+        [ 'Exata', 'AND', [], ['a','b','c','d'] ],
+        [ 'Similar','OR',[],['e','f']],
+        [ 'Similar','OR',[],['g','h']],
+        [ 'Similar','OR',[],['i','j']],
+        [ 'Similar','OR',[],['k','l']],
+        [ 'Similar','OR',[],['m','n']]
     ];
 
     expect(remove.removeOuterDuplicates(report)).toEqual(result);

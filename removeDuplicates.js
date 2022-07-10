@@ -1,46 +1,33 @@
 function removeOuterDuplicates (dirtyReport) {
 
-    if(dirtyReport.length == 1) {
-        return dirtyReport;
+    // the objective of this function is to remove duplicates of subarrays comparing LAST with NEXT
+    // in other words, take arr1 and arr2, compare, remove duplicates from arr2. take arr2 and arr3, compare, remove duplicates from arr3
+    // it takes into account that the first rules (first array) is more specific than the next array, this is based
+    // on the configuration of the rules files. if the rules files is not ordered from most specific to last specific
+    // consider not using this function
+
+    if(dirtyReport.length == 1) { // if the length is 1, then there's only 1 rule, so nothing to compare with
+        return dirtyReport;       // therefore, immediately return
     }
 
-    const intermediateReport = [];
-    const firstEntry = dirtyReport[0];
-    intermediateReport.push(firstEntry);
+    const finalReport = [];
+    const count = dirtyReport.length; // the size of this array will be altered, that's why we need to save the length elsewhere
 
-    for (let i = 0; i < dirtyReport.length - 1; i++) {
+    for (let i = 0; i < count; i++) {
 
-        const shiftedOut = dirtyReport.shift();
+        const shiftedOut = dirtyReport.shift(); // remove first arr, save it
         
-        dirtyReport.forEach( entry => {        
+        dirtyReport.forEach( entry => {        // compare every other arr with the shiftedout
 
-            if(entry[3].filter(item => !shiftedOut[3].includes(item)) != null){      
+            if(entry[3].filter(item => !shiftedOut[3].includes(item)) != null){ // check if there are duplicates     
                 const newResults = entry[3].filter(item => !shiftedOut[3].includes(item));
-                entry.pop();
-                entry.push(newResults);
-                intermediateReport.push(entry);  
-            } else {
-                intermediateReport.push(entry);
-            }        
+                entry.pop(); // throw away dirty results
+                entry.push(newResults); // push clean results
+            }                   
         });
+        finalReport.push(shiftedOut); // insert shiftedout to finalReport
     }
-
-    const cleanReport = [];
-    cleanReport.push(firstEntry);
-
-    for (let i = 0; i < intermediateReport.length; i++) {
-
-        const shiftedOut = intermediateReport.shift();
-
-        if(intermediateReport[0][3].filter(item => !shiftedOut[3].includes(item)) != null) {
-            const newResults = intermediateReport[0][3].filter(item => !shiftedOut[3].includes(item));
-            intermediateReport[0].pop();
-            intermediateReport[0].push(newResults);
-            cleanReport.push(intermediateReport[0]);
-        } else {
-            cleanReport.push(intermediateReport[0]);
-        }  
-    }
-    return cleanReport;
+    
+    return finalReport;
 }
 exports.removeOuterDuplicates = removeOuterDuplicates;
