@@ -73,7 +73,7 @@ npm test
 1. Instalar o NodeJS
 2. Clonar o repoitório em um diretório de sua preferência
 3. Abrir o terminal no diretório escolhido
-4. Instalar todas as dependências
+4. Instalar todas as dependências com o comando abaixo:
 ```
 npm install
 ```
