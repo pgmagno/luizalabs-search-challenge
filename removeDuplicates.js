@@ -1,27 +1,3 @@
-function removeInnerDuplicates(dirtyReport) {
-
-    const cleanReport = [];
-
-    dirtyReport.forEach( array => {
-        const newEntry = [];
-        newEntry.push(array[0]); //pushing Rule Name
-        const uniqueResultsArray = [...new Set(array[3])]; //removing inner duplicates from results
-        newEntry.push(uniqueResultsArray); //pushing clean results
-        cleanReport.push(newEntry); //pushing new entry
-    });
-
-    return cleanReport;
-}
-
-const reportBig = [
-    ['a','AND',[/bTEST/,/TEST2/],[1,2,3,4,5]],
-    ['a','OR',[/bTEST/,/TEST2/],[1,2,3,4,5,6,7,8,9,0]],
-    ['a','AND',[/bTEST/,/TEST2/],[1,2,3,4,5,6,7,8,9,0,11,12,13]]]
-const report1 = [
-    ['a',[1,2,3,4,5]],
-    ['a',[1,2,3,4,5,6,7,8,9,0]],
-    ['a',[1,2,3,4,5,6,7,8,9,0,11,12,13]]
-]
 function removeOuterDuplicates (dirtyReport) {
 
     if(dirtyReport.length == 1) {
@@ -67,6 +43,4 @@ function removeOuterDuplicates (dirtyReport) {
     }
     return cleanReport;
 }
-
-exports.removeInnerDuplicates = removeInnerDuplicates;
 exports.removeOuterDuplicates = removeOuterDuplicates;

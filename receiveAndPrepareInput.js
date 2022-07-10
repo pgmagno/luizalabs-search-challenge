@@ -60,7 +60,7 @@ function checkRules(rules) {
             }
 
         if (JSON.stringify(Object.keys(rule)) != JSON.stringify(Object.keys(objectModel))){
-            throw new Error("Rules file contains rule objects with mispelled keys.\n");
+            throw new Error("Rules file contains rule objects with misspelled keys.\n");
         }
     });
 
@@ -69,7 +69,8 @@ function checkRules(rules) {
 
 function prepareTerms(terms, rules) {
 
-    const preparedTerms = []
+    const preparedTerms = [];
+    
     rules.forEach( rule => {
         const termAndRule = [
             rule.Name,
@@ -77,11 +78,14 @@ function prepareTerms(terms, rules) {
             [],
             []        
         ];
-        for (let i = 0; i < terms.length; i++) {
-            termAndRule[2].push(new RegExp(rule.RegExpBefore + terms[i] + rule.RegExpAfter, rule.RegExpFlag));
-        }
+
+        terms.forEach( term => {
+            termAndRule[2].push(new RegExp(rule.RegExpBefore + term + rule.RegExpAfter, rule.RegExpFlag));
+        });
+
         preparedTerms.push(termAndRule);            
     });
+
     return preparedTerms;
 }
 

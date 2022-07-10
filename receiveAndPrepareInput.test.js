@@ -1,4 +1,4 @@
-const r = require("./rules");
+
 const p = require('./receiveAndPrepareInput');
 
 //// tests for receiveInput
@@ -74,7 +74,7 @@ test('Throws ERROR if there are rule objects which contain incorrect Regular Exp
 });
 
 
-test('Throws ERROR if there are rule objects which contain mispelled keys', () => {
+test('Throws ERROR if there are rule objects which contain misspelled keys', () => {
     
     // The key 'Nome' should be spelled 'Name'
     
@@ -91,7 +91,7 @@ test('Throws ERROR if there are rule objects which contain mispelled keys', () =
     function checkRules() {
       p.checkRules(rules);
     }  
-    expect(checkRules).toThrowError(new Error("Rules file contains rule objects with mispelled keys.\n"));
+    expect(checkRules).toThrowError(new Error("Rules file contains rule objects with misspelled keys.\n"));
 });
 
 test('Throws ERROR if there are rule objects which contain unsupported criteria', () => {
