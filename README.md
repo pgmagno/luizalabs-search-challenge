@@ -89,6 +89,6 @@ npm test
 ```
 7. Você pode testar a aplicação usando os arquivos de teste (mockdata.zip). Descompacte e utilize o caminho dessa pasta na execução (passo 5)
 
-[Back to top](#back)
+[Voltar ao topo da página](#back)
 
 ---
