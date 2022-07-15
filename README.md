@@ -42,6 +42,7 @@ node app.js "walt disney" "./data"
 npm test
 ```
 7. Test drive the application using the mockdata.zip file provided. Unizip anywhere and indicate the path in the command line (step 5)
+
 [Back to top](#back)
 
 ---
